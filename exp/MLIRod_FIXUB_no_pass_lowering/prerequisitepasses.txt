@@ -1,0 +1,16 @@
+--one-shot-bufferize : --one-shot-bufferize="dialect-filter=tensor,linalg,bufferization" --one-shot-bufferize="dialect-filter=linalg" --convert-linalg-to-loops --one-shot-bufferize="dialect-filter=arith" --convert-arith-to-llvm --finalize-memref-to-llvm --scf-bufferize
+--one-shot-bufferize : --expand-strided-metadata --func-bufferize --convert-scf-to-cf --one-shot-bufferize="dialect-filter=tensor"
+--func-bufferize : --one-shot-bufferize="dialect-filter=tensor,linalg,bufferization"
+--convert-scf-to-cf : --func-bufferize --scf-bufferize
+--one-shot-bufferize="dialect-filter=arith" --convert-arith-to-llvm : --one-shot-bufferize="dialect-filter=tensor,linalg,bufferization"
+--one-shot-bufferize="dialect-filter=tensor" : --one-shot-bufferize="dialect-filter=tensor,linalg,bufferization" 
+--expand-strided-metadata --func-bufferize : --one-shot-bufferize="dialect-filter=tensor,linalg,bufferization" 
+--scf-bufferize : --one-shot-bufferize="dialect-filter=tensor,linalg,bufferization"
+--reconcile-unrealized-casts : all
+--convert-linalg-to-loops : --scf-bufferize --one-shot-bufferize="dialect-filter=tensor,linalg,bufferization"
+--convert-index-to-llvm : --one-shot-bufferize="dialect-filter=tensor,linalg,bufferization" 
+--convert-arith-to-llvm : --one-shot-bufferize="dialect-filter=tensor,linalg,bufferization" 
+--convert-math-to-llvm : --one-shot-bufferize="dialect-filter=tensor,linalg,bufferization" 
+--convert-vector-to-llvm : --one-shot-bufferize="dialect-filter=tensor,linalg,bufferization" 
+--convert-func-to-llvm : --one-shot-bufferize="dialect-filter=tensor,linalg,bufferization" --finalize-memref-to-llvm
+--one-shot-bufferize="dialect-filter=tensor,linalg,bufferization" : --lower-affine --test-expand-math
